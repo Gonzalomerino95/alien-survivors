@@ -2,6 +2,8 @@ class Game{
     constructor(ctx){
         this.ctx = ctx;
         this.interval = null;
+        this.background = new Background(ctx);
+        this.player = new Player(ctx);
     }
 
     start(){
@@ -19,7 +21,8 @@ class Game{
     }
 
     move(){
-
+        this.background.move();
+        this.player.move();
     }
 
     shoot(){
@@ -31,7 +34,8 @@ class Game{
     }
 
     draw(){
-
+        this.background.draw();
+        this.player.draw();
     }
 
     gameOver(){
