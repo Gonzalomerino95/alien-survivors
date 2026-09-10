@@ -1,8 +1,11 @@
 class Player {
     constructor(ctx){
         this.ctx = ctx;
-        this.playerSprite = new Image();
-        this.playerSprite.src = "./Assets/Sprites/Player/Ship_Mid.png"
+
+        this.playerSprites = [];
+        this.playerSpritePosition = 2;
+        this.targetSpritePosition = null;
+        this.lastSpriteChange = performance.now();
 
         this.x = this.ctx.canvas.width/2;
         this.y = this.ctx.canvas.height/2;
@@ -20,6 +23,15 @@ class Player {
             ArrowLeft : false,
             ArrowRight : false, 
         };
+
+        //Load Sprites
+        const spriteArr = ["./Assets/Sprites/Player/Ship_FarLeft.png", "./Assets/Sprites/Player/Ship_Left.png", "./Assets/Sprites/Player/Ship_Mid.png", "./Assets/Sprites/Player/Ship_Right.png", "./Assets/Sprites/Player/Ship_FarRight.png"];
+        
+        spriteArr.forEach((sprite)=>{
+            const playerSprite = new Image();
+            playerSprite.src = sprite;
+            this.playerSprites.push(playerSprite);
+        })
 
         //Player Input Listners
         document.addEventListener("keydown", (e) => {
@@ -58,21 +70,58 @@ class Player {
     }
 
     draw(){
-        this.ctx.drawImage(this.playerSprite, this.x - this.width/2, this.y - this.height/2 ,this.width, this.height);
+        /*if(this.keyPressed.ArrowLeft){
+                console.log("Sprite Arr:", this.playerSprites)
+                console.log("Sprite Drawn:", this.playerSprites[this.playerSpritePosition])
+        }*/
+        this.ctx.drawImage(this.playerSprites[this.playerSpritePosition], this.x - this.width/2, this.y - this.height/2 ,this.width, this.height);
     }
 
     move(){
-        for(key in this.keyPressed){
+        for(let key in this.keyPressed){
+            if(this.keyPressed[key] === true){
+                switch (key){
+                    case "ArrowUp":
+                        this.y -= this.speed;
+                        break;
+                    case "ArrowDown":
+                        this.y += this.speed;
+                        break;
+                    case "ArrowLeft":
+                        this.x -= this.speed;
+                        break;
+                    case "ArrowRight":
+                        this.x += this.speed;
+                        break;
+                }
+            }
+        }
+        
 
-            
+        //Choose the target sprite
+        if(this.keyPressed.ArrowLeft === true && this.keyPressed.ArrowRight === false){
+            this.targetSpritePosition = 0;
+        }else if(this.keyPressed.ArrowLeft === false && this.keyPressed.ArrowRight === true){
+            this.targetSpritePosition = 4;
+        }else{
+            this.targetSpritePosition = 2;
+        }
+
+        //Move to target sprite, going through intermediate sprites
+        const elapsed = performance.now() - this.lastSpriteChange;
+        if(elapsed >= 250){
+            console.log("playerSpritePosition:", this.playerSpritePosition, "targetSpritePosition:", this.targetSpritePosition)
+            if(this.playerSpritePosition < this.targetSpritePosition){
+                this.playerSpritePosition++;
+            }
+            if(this.playerSpritePosition > this.targetSpritePosition){
+                this.playerSpritePosition--;
+            }
+            this.lastSpriteChange = performance.now();
         }
     }
 
     shoot(){
-
-    }
-
-    checkCollision(){
 
     }
 }
