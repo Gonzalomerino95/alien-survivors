@@ -6,6 +6,7 @@ class Player {
         this.playerSpritePosition = 2;
         this.targetSpritePosition = null;
         this.lastSpriteChange = performance.now();
+        this.lastBulletFired = performance.now();
 
         this.x = this.ctx.canvas.width/2;
         this.y = this.ctx.canvas.height/2;
@@ -22,6 +23,7 @@ class Player {
             ArrowDown : false,
             ArrowLeft : false,
             ArrowRight : false, 
+            SpaceBar : false
         };
 
         //Load Sprites
@@ -49,6 +51,9 @@ class Player {
                 case "ArrowRight":
                     this.keyPressed.ArrowRight = true;
                     break;
+                case " ":
+                    this.keyPressed.SpaceBar = true;
+                    break;
             }
         });
 
@@ -65,6 +70,9 @@ class Player {
                     break;
                 case "ArrowRight":
                     this.keyPressed.ArrowRight = false;
+                    break;
+                case " ":
+                    this.keyPressed.SpaceBar = false;
                     break;
             }
         });
@@ -131,6 +139,15 @@ class Player {
     }
 
     shoot(){
+        if(this.keyPressed.SpaceBar === true){
+            //console.log("Shoot")
+            const elapsed = performance.now() - this.lastBulletFired;
 
+            if(elapsed >= 500){
+                let bullet = new Bullet(this.ctx, this.x, this. y);
+                this.lastBulletFired = performance.now();
+                return bullet;     
+            }
+        }
     }
 }

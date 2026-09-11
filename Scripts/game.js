@@ -4,6 +4,7 @@ class Game{
         this.interval = null;
         this.background = new Background(ctx);
         this.player = new Player(ctx);
+        this.bulletsArr = []
 
         this.spawnedEnemies = [];
         this.spawnLimit = 5;
@@ -44,7 +45,7 @@ class Game{
         }
     }
 
-    move(){
+    move(){ 
         this.background.move();
         this.player.move();
 
@@ -52,10 +53,23 @@ class Game{
         this.spawnedEnemies.forEach((enemy) => {
             enemy.move(this.player.x, this.player.y);
         })
+        //Move bullets
+        this.bulletsArr.forEach((bullet) => {
+            bullet.move();
+        })
+        //Remove out of bounds bullets
+        this.bulletsArr = this.bulletsArr.filter((bullet)=>{
+            if(bullet.bulletOutOfBounds === false){
+                return bullet
+            }
+        })
     }
 
     shoot(){
-
+        const bullet = this.player.shoot();
+        if(bullet){
+            this.bulletsArr.push(bullet); 
+        }
     }
 
     checkEnemyCollision(){    
@@ -110,6 +124,11 @@ class Game{
         /*Draw Enemies*/
         this.spawnedEnemies.forEach((enemy) => {
             enemy.draw();
+        })
+
+        // Draw Bullets
+        this.bulletsArr.forEach((bullet) => {
+            bullet.draw(); 
         })
     }
 
