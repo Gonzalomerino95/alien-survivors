@@ -13,7 +13,7 @@ class Player {
         this.height = 26;
         this.width = 26;
 
-        this.speed = 3;
+        this.speed = 2;
         this.vx = 0;
         this.vy = 0;
 
@@ -30,6 +30,7 @@ class Player {
         spriteArr.forEach((sprite)=>{
             const playerSprite = new Image();
             playerSprite.src = sprite;
+            //console.log(this.height, this.width)
             this.playerSprites.push(playerSprite);
         })
 
@@ -74,7 +75,7 @@ class Player {
                 console.log("Sprite Arr:", this.playerSprites)
                 console.log("Sprite Drawn:", this.playerSprites[this.playerSpritePosition])
         }*/
-        this.ctx.drawImage(this.playerSprites[this.playerSpritePosition], this.x - this.width/2, this.y - this.height/2 ,this.width, this.height);
+        this.ctx.drawImage(this.playerSprites[this.playerSpritePosition], this.x, this.y, this.width, this.height);
     }
 
     move(){
@@ -82,16 +83,24 @@ class Player {
             if(this.keyPressed[key] === true){
                 switch (key){
                     case "ArrowUp":
-                        this.y -= this.speed;
+                        if(this.y > 0){
+                            this.y -= this.speed;
+                        }
                         break;
                     case "ArrowDown":
-                        this.y += this.speed;
+                        if(this.y < this.ctx.canvas.height - this.height){
+                            this.y += this.speed;
+                        }
                         break;
                     case "ArrowLeft":
-                        this.x -= this.speed;
+                        if(this.x > 0){
+                            this.x -= this.speed;
+                        }
                         break;
                     case "ArrowRight":
-                        this.x += this.speed;
+                        if(this.x < this.ctx.canvas.width - this.width){
+                            this.x += this.speed;
+                        }
                         break;
                 }
             }
@@ -110,7 +119,7 @@ class Player {
         //Move to target sprite, going through intermediate sprites
         const elapsed = performance.now() - this.lastSpriteChange;
         if(elapsed >= 250){
-            console.log("playerSpritePosition:", this.playerSpritePosition, "targetSpritePosition:", this.targetSpritePosition)
+            //console.log("playerSpritePosition:", this.playerSpritePosition, "targetSpritePosition:", this.targetSpritePosition)
             if(this.playerSpritePosition < this.targetSpritePosition){
                 this.playerSpritePosition++;
             }
